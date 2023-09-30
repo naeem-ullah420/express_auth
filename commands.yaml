@@ -8,3 +8,5 @@ Request Validation:
   - npm install joi
 Authorization:
   - npm i jsonwebtoken
+Mail:
+  - npm i nodemailer

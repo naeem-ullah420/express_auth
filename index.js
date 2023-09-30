@@ -2,11 +2,12 @@ const express = require('express')
 const mongoose = require('mongoose')
 const User = require('./models/User')
 const emailAlreadyExistsMiddleware = require('./middlewares/emailAlreadyExists')
-const { encryptPassword, verifyPassword, generateToken } = require('./helper')
+const { encryptPassword, verifyPassword, generateToken, sendMail } = require('./helper')
 
 const validateSignUpRequest = require('./requests/signUpRequest')
 const validateLoginRequest = require('./requests/loginRequest')
 const Token = require('./models/Token')
+const { checkTokenMiddleware } = require('./middlewares/checkToken')
 
 const app = express()
 
@@ -61,6 +62,53 @@ app.post("/login",[validateLoginRequest], async (req, res) => {
             "message": "Invalid Email/Password"
         })
     }
+})
+
+
+
+app.get("/readProfile", [checkTokenMiddleware], (req, res) => {
+    return res.status(200).json({
+        "message" : "user profile fetched successfully",
+        "data": req.auth_user
+    })
+})
+
+
+app.post("/forgotPassword", async (req, res) => {
+    try{
+        const {email} = req.body
+        const user = await User.findOne({
+            email: email
+        })
+
+        if(user) {
+            const forgotPasswordToken = await Token.create({
+                user_id: user._id,
+                token_type:"forgot_password_token",
+                token: generateToken({email: user.email})
+            })
+            const resetPasswordUrl = "http://localhost:8000/resetPassword/" + forgotPasswordToken.token
+            const data = `<a href="${resetPasswordUrl}">${resetPasswordUrl}</a>`
+            await sendMail("Click this link to reset password" + data, email)
+        }
+
+        return res.status(200).json({
+            "message": "Email Sent Successfully"
+        })
+
+    } catch(err) {
+        console.log("error", err)
+    }
+
+})
+
+
+app.post("/resetPassword/:token", async (req, res) => { 
+    const token = await Token.findOne({
+        token: req.params.token
+    }).populate('user_id')
+    console.log(token)
+    return res.send("Password reset successfully")
 })
 
 app.listen(8000, ()=>{

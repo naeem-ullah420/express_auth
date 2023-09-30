@@ -1,0 +1,10 @@
+Basic commands:
+  - npm init -y
+  - npm i express mongoose
+  - npm i -D nodemon
+Password hashing:
+  - npm i argon2
+Request Validation:
+  - npm install joi
+Authorization:
+  - npm i jsonwebtoken

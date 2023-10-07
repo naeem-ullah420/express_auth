@@ -1,9 +1,10 @@
 const express = require('express')
 const connect_mongodb = require("./utilities/mongodb_connnection")
 const authRouter = require("./routes/auth")
-
+const cors = require('cors')
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 app.use("/api/auth", authRouter)
 

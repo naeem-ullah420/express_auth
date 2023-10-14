@@ -10,3 +10,5 @@ Authorization:
   - npm i jsonwebtoken
 Mail:
   - npm i nodemailer
+Environment variables:
+  - npm install dotenv

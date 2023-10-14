@@ -5,6 +5,7 @@ const signUpRequestSchema = Joi.object({
     email: Joi.string().required(),
     password: Joi.string().required(),
     confirm_password: Joi.string().required().equal(Joi.ref('password')),
+    accept_terms_and_conditions: Joi.boolean().required(),
 })
 
 const validateSignUpRequest = (req, res, next) => {

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const connect_mongodb = () => {
-    mongoose.connect("mongodb://127.0.0.1:27017/express_auth")
+    mongoose.connect(process.env.MONGO_CONNECTION_URI)
     .then(() => {
         console.log("mongodb connected")
     })
@@ -10,6 +10,4 @@ const connect_mongodb = () => {
     })
 }
 
-module.exports = {
-    connect_mongodb
-}
+module.exports = connect_mongodb

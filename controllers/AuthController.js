@@ -58,9 +58,9 @@ const forgotPassword = async (req, res) => {
                 token_type:"forgot_password_token",
                 token: generateToken({email: user.email})
             })
-            const resetPasswordUrl = "http://localhost:8000/api/auth/resetPassword/" + forgotPasswordToken.token
+            const resetPasswordUrl = process.env.FRONTEND_URL + "/resetPassword/" + forgotPasswordToken.token
             const data = `<a href="${resetPasswordUrl}">${resetPasswordUrl}</a>`
-            await sendMail("Click this link to reset password" + data, email)
+            sendMail("Click this link to reset password" + data, email)
         }
 
         return res.status(200).json({

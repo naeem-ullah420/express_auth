@@ -26,7 +26,7 @@ let verifyPassword = async (password_hash, plain_password) => {
 }
 
 let generateToken = (data) => {
-  let token = jwt.sign(data, 'MySecret');
+  let token = jwt.sign(data, process.env.JWT_SECRET);
   return token
 }
 
@@ -34,16 +34,16 @@ let generateToken = (data) => {
 let sendMail = async (data, receiver_email) => {
   try{
     let transport = nodemailer.createTransport({
-      host: "sandbox.smtp.mailtrap.io",
-      port: 2525,
+      host: process.env.MAIL_HOST,
+      port: process.env.MAIL_PORT,
       auth: {
-        user: "7b131462101855",
-        pass: "21113a50057445"
+        user: process.env.MAIL_USERNAME,
+        pass: process.env.MAIL_PASSWORD
       }
     });
 
     const info = await transport.sendMail({
-      from: '"Fred Foo 👻" <foo@example.com>', // sender address
+      from: process.env.MAIL_FROM, // sender address
       to: receiver_email, // list of receivers
       subject: "ForgotPassword", // Subject line
       text: "Forgot Password", // plain text body

@@ -1,5 +1,7 @@
+require('dotenv').config()
+
 const express = require('express')
-const connect_mongodb = require("./utilities/mongodb_connnection")
+const connect_mongodb = require("./utilities/mongodb_connection")
 const authRouter = require("./routes/auth")
 const cors = require('cors')
 const app = express()
@@ -11,6 +13,6 @@ app.use("/api/auth", authRouter)
 // mongodb connection
 connect_mongodb()
 
-app.listen(8000, ()=>{
-    console.log("Listening on http://localhost:8000")
+app.listen(process.env.PORT, ()=>{
+    console.log("Listening on " + process.env.BACKEND_URL)
 })

@@ -1,19 +1,28 @@
 const express = require('express')
-const AuthController = require("../controllers/AuthController")
-const auth_routes = express.Router()
+const authRouter = express.Router()
 const validateSignUpRequest = require('../requests/signUpRequest')
 const validateLoginRequest = require('../requests/loginRequest')
 const emailAlreadyExistsMiddleware = require('../middlewares/emailAlreadyExists')
 const checkTokenMiddleware = require('../middlewares/checkToken')
+const { signUp } = require("../controllers/AuthController")
+const { login } = require("../controllers/AuthController")
+const { forgotPassword } = require("../controllers/AuthController")
+const { resetPassword } = require("../controllers/AuthController")
+const { readProfile } = require("../controllers/AuthController")
+const checkResetPasswordToken = require("../middlewares/checkResetPasswordToken")
+const validateResetRequest = require("../requests/resetPasswordRequest")
+const { logout } = require("../controllers/AuthController")
 
-auth_routes.post("/signup", [validateSignUpRequest, emailAlreadyExistsMiddleware], AuthController.signUp)
+authRouter.post("/signup", [validateSignUpRequest, emailAlreadyExistsMiddleware] , signUp)
 
-auth_routes.post("/login",[validateLoginRequest], AuthController.login)
+authRouter.post("/login",[validateLoginRequest], login)
 
-auth_routes.post("/forgotPassword", AuthController.forgotPassword)
+authRouter.post("/forgotPassword", forgotPassword)
 
-auth_routes.post("/resetPassword/:token", AuthController.resetPassword)
+authRouter.post("/resetPassword/:token",[checkResetPasswordToken, validateResetRequest], resetPassword)
 
-auth_routes.get("/readProfile",[checkTokenMiddleware], AuthController.readProfile)
+authRouter.get("/readProfile", [checkTokenMiddleware], readProfile)
 
-module.exports = auth_routes
+authRouter.get("/logout", [checkTokenMiddleware], logout)
+
+module.exports = authRouter

@@ -1,14 +1,12 @@
 const Joi = require('joi');
 
-const signUpRequestSchema = Joi.object({
-    name: Joi.string().required(),
-    email: Joi.string().required(),
+const loginRequestSchema = Joi.object({
     password: Joi.string().required(),
     confirm_password: Joi.string().required().equal(Joi.ref('password')),
 })
 
-const validateSignUpRequest = (req, res, next) => {
-    const { error, value } = signUpRequestSchema.validate(req.body);
+const validateResetRequest = (req, res, next) => {
+    const { error, value } = loginRequestSchema.validate(req.body);
     if(error) {
         return res.status(400).json({
             "message": error.details[0].message.replace('"', '').replace('"', '')
@@ -17,4 +15,4 @@ const validateSignUpRequest = (req, res, next) => {
     next()
 }
 
-module.exports = validateSignUpRequest
+module.exports = validateResetRequest

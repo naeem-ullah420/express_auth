@@ -1,10 +1,7 @@
-const { generateToken } = require("../helper")
-const { verifyPassword } = require("../helper")
-const { encryptPassword } = require("../helper")
+
 const User = require("../models/User")
 const Token = require("../models/Token")
-const { sendMail } = require("../helper")
-
+const {verifyPassword, generateToken, sendMail, encryptPassword} = require("../helper")
 
 const signUp = async(req, res) => {
     console.log(req.body)
@@ -21,7 +18,6 @@ const signUp = async(req, res) => {
         "message":"User Signed Up Successfully"
     })
 }
-
 
 const login = async (req, res) => {
     const {email, password} = req.body
@@ -62,7 +58,7 @@ const forgotPassword = async (req, res) => {
                 token_type:"forgot_password_token",
                 token: generateToken({email: user.email})
             })
-            const resetPasswordUrl = "http://localhost:8000/resetPassword/" + forgotPasswordToken.token
+            const resetPasswordUrl = "http://localhost:8000/api/auth/resetPassword/" + forgotPasswordToken.token
             const data = `<a href="${resetPasswordUrl}">${resetPasswordUrl}</a>`
             await sendMail("Click this link to reset password" + data, email)
         }
@@ -77,16 +73,23 @@ const forgotPassword = async (req, res) => {
 
 }
 
+const resetPassword = async (req, res) => {
 
-const resetPassword = async (req, res) => { 
-    console.log(new Date(Date.now() - 10 * 60 * 1000))
-    const token = await Token.findOne({
-        token: req.params.token,
-        createdAt: {'$gte': new Date(Date.now() - 10 * 60 * 1000)},
+    const successful = await User.findByIdAndUpdate(req.auth_user._id, {
+        password: await encryptPassword(req.body.password),
     })
-    console.log(token)
-    return res.send("Password reset successfully")
+
+    if(successful) {
+        await Token.findOneAndDelete({
+            'token': req.params.token
+        })
+    }
+
+    return res.status(200).json({
+        "message": "Password reset successfully"
+    })
 }
+
 
 const readProfile = (req, res) => {
     return res.status(200).json({
@@ -95,12 +98,24 @@ const readProfile = (req, res) => {
     })
 }
 
-const AuthController = {
+
+const logout = async (req, res) => {
+
+    await Token.findOneAndDelete({
+        'token': req.headers.token
+    })
+
+    return res.status(200).json({
+        "message": "logout successful"
+    })
+}
+
+
+module.exports = {
     signUp,
     login,
     forgotPassword,
+    readProfile,
     resetPassword,
-    readProfile
+    logout
 }
-
-module.exports = AuthController

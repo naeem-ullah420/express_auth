@@ -1,4 +1,4 @@
-Ecommerce Endpoints and Frontend:
+**Ecommerce Endpoints and Frontend**
  - [x] Authentication and Authorization
  - [x] MVC pattern
  - [x] Dotenv and proper request validations and middlewares

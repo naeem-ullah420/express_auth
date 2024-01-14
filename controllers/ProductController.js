@@ -40,11 +40,29 @@ const deleteProduct = async(req, res) => {
 }
 
 const readProducts = async (req, res) => {
-    const products = await Product.find({}).sort('-createdAt')
+    let query = {}
+
+    if(req.query?.search) {
+        query = {name:{"$regex":req.query?.search, "$options":"i"}}
+    }
+
+    const per_page = 10
+    const products_total_count = await Product.find(query).count()
+    const current_page = Number(req.query?.page ? req.query.page : 1)
+    const total_pages = Math.ceil(products_total_count / per_page)
+    const offset = (current_page * per_page) - per_page
+    
+    const products = await Product.find(query).limit(per_page).skip(offset).sort('-createdAt')
 
     return res.json({
         "message": "products fetched successfully",
         "data": {
+            "pagination": {
+                "per_page": per_page,
+                "total": products_total_count,
+                "current_page":current_page,
+                "total_pages":total_pages,
+            },
             "products": products.map(product => {
                 return {
                     ...JSON.parse(JSON.stringify(product)),

@@ -5,7 +5,11 @@ const connect_mongodb = require("./utilities/mongodb_connection")
 const authRouter = require("./routes/auth")
 const cors = require('cors')
 const productRouter = require("./routes/product")
+const categoryRouter = require('./routes/category')
+const paymentRouter = require('./routes/payment')
+const ordersRouter = require('./routes/orders')
 const app = express()
+
 
 // static files
 app.use("/uploads",express.static('uploads'))
@@ -14,11 +18,20 @@ app.use("/uploads",express.static('uploads'))
 app.use(cors())
 
 // json payload
-app.use(express.json())
+app.use(express.json({
+    limit: '1050mb',
+    verify: (req, res, buf) => {
+      req.rawBody = buf.toString();
+    }
+}))
+
 
 // routes namespaces
 app.use("/api/auth", authRouter)
 app.use("/api/product", productRouter)
+app.use("/api/categories", categoryRouter)
+app.use("/api/payment", paymentRouter)
+app.use("/api/orders", ordersRouter)
 
 // fallback route
 app.all("*", (req, res) => {

@@ -4,7 +4,15 @@ const ProductSchema = new mongoose.Schema({
     name: String,
     description: String,
     image: String,
-    user_id: mongoose.Schema.ObjectId,
+    price: String,
+    category_id: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'categories'
+    },
+    user_id: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'users'
+    },
     price: {
         type: Number,
         default: 0,

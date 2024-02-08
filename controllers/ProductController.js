@@ -8,16 +8,18 @@ const createProduct = async (req, res) => {
         name        : body.name,
         description : body.description,
         image       : req.file.filename,
-        user_id     : req.auth_user._id
+        user_id     : req.auth_user._id,
+        price       : body.price,
+        category_id : body.category_id,
     })
 
-    console.log(req.file)
+    // console.log(req.file)
 
     return res.json({
         "message":"product created successfully",
         "data":{
             "product": {
-                ...JSON.parse(JSON.stringify(product)),
+                ...JSON.parse(JSON.stringify(await product.populate('category_id'))),
                 'image_url': `${process.env.BACKEND_URL}/uploads/${product.image}` 
             }
         }
@@ -43,7 +45,11 @@ const readProducts = async (req, res) => {
     let query = {}
 
     if(req.query?.search) {
-        query = {name:{"$regex":req.query?.search, "$options":"i"}}
+        query['name'] = {"$regex":req.query?.search, "$options":"i"}
+    }
+
+    if(req.query?.category_id) {
+        query['category_id'] = req.query?.category_id
     }
 
     const per_page = 10
@@ -51,8 +57,8 @@ const readProducts = async (req, res) => {
     const current_page = Number(req.query?.page ? req.query.page : 1)
     const total_pages = Math.ceil(products_total_count / per_page)
     const offset = (current_page * per_page) - per_page
-    
-    const products = await Product.find(query).limit(per_page).skip(offset).sort('-createdAt')
+
+    const products = await Product.find(query).populate('category_id').limit(per_page).skip(offset).sort('-createdAt')
 
     return res.json({
         "message": "products fetched successfully",

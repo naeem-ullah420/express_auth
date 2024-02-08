@@ -31,4 +31,6 @@ productRouter.get("/read", [checkTokenMiddleware], readProducts)
 
 productRouter.post("/delete", [checkTokenMiddleware, validateProductDeleteRequest, checkProductMiddleware], deleteProduct)
 
+
+
 module.exports = productRouter

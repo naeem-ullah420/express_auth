@@ -36,7 +36,7 @@ app.use("/api/orders", ordersRouter)
 // fallback route
 app.all("*", (req, res) => {
     return res.status(404).json({
-        "message":"route not found"
+        "message":"route not found."
     })
 })
 

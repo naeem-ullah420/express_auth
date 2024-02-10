@@ -15,7 +15,9 @@ const app = express()
 app.use("/uploads",express.static('uploads'))
 
 // cors handling
-app.use(cors())
+app.use(cors(
+    
+))
 
 // json payload
 app.use(express.json({

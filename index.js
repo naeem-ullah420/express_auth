@@ -15,9 +15,9 @@ const app = express()
 app.use("/uploads",express.static('uploads'))
 
 // cors handling
-app.use(cors(
-    
-))
+app.use(cors({
+    'origin': 'https://express-auth-frontend.vercel.app'
+}))
 
 // json payload
 app.use(express.json({

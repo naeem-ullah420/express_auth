@@ -1,0 +1,12 @@
+- React Context Api (for maintaining global store and persist data) [done]
+- Custom React Hook [done]
+- Cart System with data persistence [done]
+- Seeders for database on backend [done]
+- Eager load [done]
+- Frontend .env
+- Stipe Payment Gateway integration
+- Handle incoming webhooks
+- Custom stripe react form
+- Gridfs with multer file upload on backend
+- Deployment of static project on vercel
+- Deployment of Express apis on vercel

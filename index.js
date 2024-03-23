@@ -5,6 +5,7 @@ const connect_mongodb = require("./utilities/mongodb_connection")
 const authRouter = require("./routes/auth")
 const cors = require('cors')
 const productRouter = require("./routes/product")
+const categoryRouter = require('./routes/categories')
 const app = express()
 
 // static files
@@ -19,6 +20,7 @@ app.use(express.json())
 // routes namespaces
 app.use("/api/auth", authRouter)
 app.use("/api/product", productRouter)
+app.use("/api/categories", categoryRouter)
 
 // fallback route
 app.all("*", (req, res) => {

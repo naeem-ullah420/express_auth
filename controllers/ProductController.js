@@ -6,13 +6,15 @@ const createProduct = async (req, res) => {
     const product = await Product.create({
         name        : body.name,
         description : body.description,
+        price       : body.price,
+        category_id : body.category_id,
         image       : req.file.filename,
         user_id     : req.auth_user._id
     })
     return res.json({
         "message":"product created successfully",
         "data": {
-            "product": product
+            "product": await product.populate('category_id')
         }
     })
 }
@@ -53,7 +55,7 @@ const readProducts = async (req, res) => {
     const offset = (page * per_page) - per_page 
     const total_pages = Math.ceil(products_count/per_page)
 
-    const products = await Product.find(query).sort('-createdAt').skip(offset).limit(per_page)
+    const products = await Product.find(query).sort('-createdAt').skip(offset).limit(per_page).populate('category_id')
     return res.json({
         "message": "products fetched successfully",
         "data": {

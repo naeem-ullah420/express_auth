@@ -9,6 +9,10 @@ const ProductSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
+    category_id: {
+        type: mongoose.Schema.ObjectId,
+        ref: 'categories'
+    },
     rating:{
         type: Number,
         default: 0,

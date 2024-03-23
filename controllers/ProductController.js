@@ -36,6 +36,8 @@ const deleteProduct = async(req, res) => {
 
 const readProducts = async (req, res) => {
     const search = req.query?.search
+    const category_id = req.query?.category_id
+    const product_id = req.query?.product_id
     console.log("search: ", search)
 
     let query = {}
@@ -47,6 +49,14 @@ const readProducts = async (req, res) => {
                 {description: {$regex: search, $options: 'i'}},
             ]
         }
+    }
+
+    if(category_id) {
+        query['category_id'] = category_id
+    }
+    
+    if(product_id) {
+        query['_id'] = product_id
     }
 
     const products_count = await Product.find(query).count()

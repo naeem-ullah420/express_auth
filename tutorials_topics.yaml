@@ -3,6 +3,8 @@
 - Cart System with data persistence [done]
 - Seeders for database on backend [done]
 - Eager load [done]
+- Category in sidebar with filter and category store
+- Product Detail 
 - Frontend .env
 - Stipe Payment Gateway integration
 - Handle incoming webhooks
